@@ -69,11 +69,14 @@ class Game {
             case "pawn":
                 let multiplier = color == "white" ? -1 : 1;
                 let newY = y + multiplier;
-                for (let relX = -1; relX < 2; relX++)
+                for (let relX = -1; relX <= 1; relX++)
                 {
                     let newX = x + relX;
+
                     let mayHavePiece = Math.abs(relX % 2) == 1 ? true : false;
                     let hasPiece = board.hasPiece(newX, newY);
+
+                    console.log("["+newX+", "+ newY +"]: May contain piece? " + mayHavePiece + ", contains piece? " + hasPiece );
 
                     if ( hasPiece == mayHavePiece )
                     possibleMoves.push([newX, newY]);
@@ -85,6 +88,8 @@ class Game {
                 {
                     possibleMoves.push([x, twoMoveY]);
                 }
+                
+                // TODO: En passant
 
                 break;
             case "rook":
@@ -152,7 +157,7 @@ class Board {
     
     hasPiece(x, y)
     {
-        return this.board[y][x] != "";
+        return this.board[(this.height-1) - y][x] != "";
     }
 
     isLegalField(x, y)
