@@ -53,19 +53,47 @@ class Game {
     };
 
     getLegalMoves(pieceName, pieceLocation, board) {
-        return ["1/1", "1/2"];
+        // Get color and piece
+        let splitName = pieceName.split("/");
+        let color = splitName[0];
+        let piece = splitName[1];
+
+        let legalMoves = [];
+
+        switch(piece)
+        {
+            case "pawn":
+
+                break;
+            case "rook":
+                break;
+            case "knight":
+                break;
+            case "bishop":
+                break;
+            case "king":
+                break;
+            case "queen":
+                break;
+        }
+
+        return legalMoves;
     }
 };
 
 class Board {
     
+    // Number of fields in each direction
+    width = 8;
+    height = 8;
+
     constructor()
     {
-        // Create the empty board
+        // Create an empty board
         this.board = [];
-        for(let y = 0; y < 8; y++) {
+        for(let y = 0; y < this.height; y++) {
             this.board[y] = [];
-            for(let x = 0; x < 8; x++) {
+            for(let x = 0; x < this.width; x++) {
                 this.board[y][x] = "";
             }
         }
@@ -77,22 +105,20 @@ class Board {
     }
 
     setPiece(x, y, piece, playerID)
-    {
-        if (x < 0 || x > 7 || y < 0 || y > 7) return;
-        
+    {        
         let name = piece != null ? this.players[playerID] + "/" + piece : "";
-        this.board[y][x] = name;
+        this.board[(this.height-1) - y][x] = name;
     }
 
     movePiece(oldX, oldY, newX, newY)
     {
-        this.board[newY][newX] = this.board[oldY][oldX];
-        this.board[oldY][oldX] = "";
+        this.board[(this.height-1) - newY][newX] = this.board[(this.height-1) - oldY][oldX];
+        this.board[(this.height-1) - oldY][oldX] = "";
     }
 
     getPiece(x, y)
     {
         if (x < 0 || x > 7 || y < 0 || y > 7) return "";
-        return this.board[y][x];
+        return this.board[(this.height-1) - y][x];
     }
 }

@@ -108,6 +108,7 @@
             let stringMove = "" + xIndex + "/" + yIndex;
 
             isLegal = false;
+            if (legalMoves != null)
             for (let i = 0; !isLegal && i < legalMoves.length; i++)
             {
                 isLegal = legalMoves[i] == stringMove;
@@ -180,7 +181,7 @@
         for (let x = 0; x < 8; x++)
         {
             let offsetX = x * squareSize;
-            let offsetY = y * squareSize;
+            let offsetY = (boardSize - squareSize) - (y * squareSize);
 
             let piece = board.getPiece(x, y);            
             if (piece != "")
@@ -190,8 +191,6 @@
             }
     
         }
-
-
 
         // Insert the generated board into the HTML
         document.getElementById("board").appendChild( element );
