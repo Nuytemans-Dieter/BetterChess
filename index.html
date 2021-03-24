@@ -19,18 +19,31 @@
 
 <!-- Pick the script that handles the game's logic -->
 <script src="game.js"></script>
+
+<!-- This script handles user dragging input -->
 <script>
     function makeDraggable(evt) {
         
         var element = false;
         var startX = null;
         var startY = null;
+        
+        var piece;
+        var legalMoves;
 
         var svg = evt.target;
+        // Handle mouse events
         svg.addEventListener('mousedown', startDrag);
         svg.addEventListener('mousemove', drag);
         svg.addEventListener('mouseup', endDrag);
         svg.addEventListener('mouseleave', endDrag);
+        
+        // Handle touch screen events
+        svg.addEventListener('touchstart', startDrag);
+        svg.addEventListener('touchmove', drag);
+        svg.addEventListener('touchend', endDrag);
+        svg.addEventListener('touchleave', endDrag);
+        svg.addEventListener('touchcancel', endDrag);
 
         function startDrag(evt) {
             if (evt.target.classList.contains('draggable')) {
@@ -39,11 +52,17 @@
                 // Store the element's starting position
                 startX = element.getAttributeNS(null, "x");
                 startY = element.getAttributeNS(null, "y");
-                
+
+                startXIndex = Math.floor(startX / squareSize);
+                startYIndex = Math.floor(startY / squareSize);
+                piece = board.getPiece(startXIndex, startYIndex);
+
                 // Store the relative mouse offset
                 offset = getMousePosition(evt);
                 offset.x -= parseFloat( startX );
                 offset.y -= parseFloat( startY );
+
+                legalMoves = game.getLegalMoves(piece, [startXIndex, startYIndex], board);
             }
         }
 
@@ -60,14 +79,45 @@
         function endDrag(evt) {
             if (element && startX != null && startY != null)
             {
-                element.setAttributeNS(null, "x", startX);
-                element.setAttributeNS(null, "y", startY);
+                let mouse = getMousePosition(evt);
+                xIndex = Math.floor(mouse.x / squareSize);
+                yIndex = Math.floor(mouse.y / squareSize);
+                
+                if (isLegalMove(xIndex, yIndex))
+                {
+                    // Move the element
+                    let newX = squareSize * xIndex;
+                    let newY = squareSize * yIndex;
+
+                    element.setAttributeNS(null, "x", newX);
+                    element.setAttributeNS(null, "y", newY);
+                    board.movePiece(startXIndex, startYIndex, xIndex, yIndex);
+                }
+                else
+                {
+                    // Reset the element
+                    element.setAttributeNS(null, "x", startX);
+                    element.setAttributeNS(null, "y", startY);
+                }
             }
             element = false;
         }
 
+        function isLegalMove(x, y)
+        {
+            let stringMove = "" + xIndex + "/" + yIndex;
+
+            isLegal = false;
+            for (let i = 0; !isLegal && i < legalMoves.length; i++)
+            {
+                isLegal = legalMoves[i] == stringMove;
+            }
+            return isLegal;
+        }
+
         function getMousePosition(evt) {
             var CTM = svg.getScreenCTM();
+            if (evt.touches) { evt = evt.touches[0]; }
             return {
                 x: (evt.clientX - CTM.e) / CTM.a,
                 y: (evt.clientY - CTM.f) / CTM.d
@@ -75,6 +125,8 @@
         }
     }
 </script>
+
+<!-- This script handles the game loop and uses the custom Game object -->
 <script>
 
     // Initialize game objects

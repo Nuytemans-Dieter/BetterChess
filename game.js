@@ -5,10 +5,6 @@ class Game {
         this.players = ["white", "black"];
         this.pieces = ["pawn", "bishop", "knight", "rook", "queen", "king"];
         this.chessSet = "drawn";
-
-        this.getLegalMoves = function (pieceName, pieceLocation, board) {
-            return "a1";
-        };
     }
 
 
@@ -57,7 +53,7 @@ class Game {
     };
 
     getLegalMoves(pieceName, pieceLocation, board) {
-        return "a1";
+        return ["1/1", "1/2"];
     }
 };
 
@@ -86,6 +82,12 @@ class Board {
         
         let name = piece != null ? this.players[playerID] + "/" + piece : "";
         this.board[y][x] = name;
+    }
+
+    movePiece(oldX, oldY, newX, newY)
+    {
+        this.board[newY][newX] = this.board[oldY][oldX];
+        this.board[oldY][oldX] = "";
     }
 
     getPiece(x, y)
