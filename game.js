@@ -76,8 +76,6 @@ class Game {
                     let mayHavePiece = Math.abs(relX % 2) == 1 ? true : false;
                     let hasPiece = board.hasPiece(newX, newY);
 
-                    console.log("["+newX+", "+ newY +"]: May contain piece? " + mayHavePiece + ", contains piece? " + hasPiece );
-
                     if ( hasPiece == mayHavePiece )
                     possibleMoves.push([newX, newY]);
                 }
@@ -93,6 +91,47 @@ class Game {
 
                 break;
             case "rook":
+                
+                let hasCollision = false;
+                for (let relX = -1; !hasCollision && relX >= -7; relX--)
+                {
+                    let newX = x + relX;
+                    possibleMoves.push([newX, y]);
+
+                    if (board.hasPiece(newX, y))
+                        hasCollision = true;
+                }
+
+                hasCollision = false;
+                for (let relX = 1; !hasCollision && relX <= 7; relX++)
+                {
+                    let newX = x + relX;
+                    possibleMoves.push([newX, y]);
+
+                    if (board.hasPiece(newX, y))
+                        hasCollision = true;
+                }
+
+                hasCollision = false;
+                for (let relY = -1; !hasCollision && relY >= -7; relY--)
+                {
+                    let newY = y + relY;
+                    possibleMoves.push([x, newY]);
+
+                    if (board.hasPiece(x, newY))
+                        hasCollision = true;
+                }
+
+                hasCollision = false;
+                for (let relY = 1; !hasCollision && relY <= 7; relY++)
+                {
+                    let newY = y + relY;
+                    possibleMoves.push([x, newY]);
+
+                    if (board.hasPiece(x, newY))
+                        hasCollision = true;
+                }
+
                 break;
             case "knight":
                 break;
