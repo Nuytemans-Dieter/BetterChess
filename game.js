@@ -147,6 +147,46 @@ class Game {
                 }
                 break;
             case "bishop":
+
+                let collisionLeftTop = false;
+                let collisionRightTop = false;
+                let collisionRightDown = false;
+                let collisionLeftDown = false;
+                for (let rel = 1; rel <= 7; rel++)
+                {
+                    if (!collisionLeftTop)
+                    {
+                        let newX = x - rel;
+                        let newY = y - rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionLeftTop = true;
+                    }
+
+                    if (!collisionRightDown)
+                    {
+                        let newX = x + rel;
+                        let newY = y + rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionRightDown = true;
+                    }
+
+                    if (!collisionRightTop)
+                    {
+                        let newX = x + rel;
+                        let newY = y - rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionRightTop = true;
+                    }
+
+                    if (!collisionLeftDown)
+                    {
+                        let newX = x - rel;
+                        let newY = y + rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionLeftDown = true;
+                    }
+
+                }
                 break;
             case "king":
                 break;
