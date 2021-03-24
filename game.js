@@ -58,24 +58,34 @@ class Game {
         let color = splitName[0];
         let piece = splitName[1];
 
+        let x = pieceLocation[0];
+        let y = pieceLocation[1];
+
         // Find all possible moves for each piece
 
         let possibleMoves = [];
-
         switch(piece)
         {
             case "pawn":
                 let multiplier = color == "white" ? -1 : 1;
-                let newY = pieceLocation[1] + (multiplier);
+                let newY = y + multiplier;
                 for (let relX = -1; relX < 2; relX++)
                 {
-                    let newX = pieceLocation[0] + relX;
-                    let mayHavePiece = relX % 2 == 1 ? true : false;
+                    let newX = x + relX;
+                    let mayHavePiece = Math.abs(relX % 2) == 1 ? true : false;
                     let hasPiece = board.hasPiece(newX, newY);
 
-                    if ( (hasPiece && mayHavePiece) || (!hasPiece && !mayHavePiece) )
+                    if ( hasPiece == mayHavePiece )
                     possibleMoves.push([newX, newY]);
                 }
+                
+                // Allow two field move when no piece is present and pawn is of the right team and in the right location
+                let twoMoveY = y + (multiplier * 2);
+                if ( (!board.hasPiece(x, twoMoveY)) && ( (color == "white" && y == 6) || (color == "black" && y == 1)) )
+                {
+                    possibleMoves.push([x, twoMoveY]);
+                }
+
                 break;
             case "rook":
                 break;

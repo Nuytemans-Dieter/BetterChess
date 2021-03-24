@@ -94,6 +94,8 @@
                     element.setAttributeNS(null, "x", newX);
                     element.setAttributeNS(null, "y", newY);
                     board.movePiece(startXIndex, startYIndex, xIndex, yIndex);
+
+                    drawBoard();
                 }
                 else
                 {
@@ -101,7 +103,6 @@
                     element.setAttributeNS(null, "x", startX);
                     element.setAttributeNS(null, "y", startY);
                 }
-                drawBoard();
             }
             element = false;
         }
