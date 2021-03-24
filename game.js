@@ -61,6 +61,13 @@ class Game {
         let x = pieceLocation[0];
         let y = pieceLocation[1];
 
+        // Declare collision trackers
+        let hasCollision;
+        let collisionLeftTop;
+        let collisionRightTop;
+        let collisionRightDown;
+        let collisionLeftDown;
+
         // Find all possible moves for each piece
 
         let possibleMoves = [];
@@ -92,7 +99,7 @@ class Game {
                 break;
             case "rook":
                 
-                let hasCollision = false;
+                hasCollision = false;
                 for (let relX = -1; !hasCollision && relX >= -7; relX--)
                 {
                     let newX = x + relX;
@@ -147,11 +154,10 @@ class Game {
                 }
                 break;
             case "bishop":
-
-                let collisionLeftTop = false;
-                let collisionRightTop = false;
-                let collisionRightDown = false;
-                let collisionLeftDown = false;
+                collisionLeftTop = false;
+                collisionRightTop = false;
+                collisionRightDown = false;
+                collisionLeftDown = false;
                 for (let rel = 1; rel <= 7; rel++)
                 {
                     if (!collisionLeftTop)
@@ -189,8 +195,95 @@ class Game {
                 }
                 break;
             case "king":
+
+                for (let relX = -1; relX <= 1; relX++)
+                for (let relY = -1; relY <= 1; relY++)
+                {
+                    if ( !(relX == 0 && relY == 0))
+                        possibleMoves.push([x + relX, y + relY]);
+                }
+
                 break;
             case "queen":
+                let hasCollision = false;
+                for (let relX = -1; !hasCollision && relX >= -7; relX--)
+                {
+                    let newX = x + relX;
+                    possibleMoves.push([newX, y]);
+
+                    if (board.hasPiece(newX, y))
+                        hasCollision = true;
+                }
+
+                hasCollision = false;
+                for (let relX = 1; !hasCollision && relX <= 7; relX++)
+                {
+                    let newX = x + relX;
+                    possibleMoves.push([newX, y]);
+
+                    if (board.hasPiece(newX, y))
+                        hasCollision = true;
+                }
+
+                hasCollision = false;
+                for (let relY = -1; !hasCollision && relY >= -7; relY--)
+                {
+                    let newY = y + relY;
+                    possibleMoves.push([x, newY]);
+
+                    if (board.hasPiece(x, newY))
+                        hasCollision = true;
+                }
+
+                hasCollision = false;
+                for (let relY = 1; !hasCollision && relY <= 7; relY++)
+                {
+                    let newY = y + relY;
+                    possibleMoves.push([x, newY]);
+
+                    if (board.hasPiece(x, newY))
+                        hasCollision = true;
+                }
+
+                collisionLeftTop = false;
+                collisionRightTop = false;
+                collisionRightDown = false;
+                collisionLeftDown = false;
+                for (let rel = 1; rel <= 7; rel++)
+                {
+                    if (!collisionLeftTop)
+                    {
+                        let newX = x - rel;
+                        let newY = y - rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionLeftTop = true;
+                    }
+
+                    if (!collisionRightDown)
+                    {
+                        let newX = x + rel;
+                        let newY = y + rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionRightDown = true;
+                    }
+
+                    if (!collisionRightTop)
+                    {
+                        let newX = x + rel;
+                        let newY = y - rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionRightTop = true;
+                    }
+
+                    if (!collisionLeftDown)
+                    {
+                        let newX = x - rel;
+                        let newY = y + rel;
+                        possibleMoves.push([newX, newY]);
+                        if (board.hasPiece(newX, newY)) collisionLeftDown = true;
+                    }
+
+                }
                 break;
         }
 
