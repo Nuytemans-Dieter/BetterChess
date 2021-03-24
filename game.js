@@ -63,7 +63,17 @@ class Game {
         switch(piece)
         {
             case "pawn":
+                let multiplier = color == "white" ? 1 : -1;
+                let newY = pieceLocation[1] + (multiplier);
+                for (let relX = -1; relX < 2; relX++)
+                {
+                    let newX = pieceLocation[0] + relX;
+                    let mayHavePiece = relX % 2 == 1 ? true : false;
+                    let hasPiece = board.hasPiece(newX, newY);
 
+                    if ( (hasPiece && mayHavePiece) || (!hasPiece && !mayHavePiece) )
+                    legalMoves.push(newX + "/" + newY);
+                }
                 break;
             case "rook":
                 break;
@@ -114,6 +124,11 @@ class Board {
     {
         this.board[(this.height-1) - newY][newX] = this.board[(this.height-1) - oldY][oldX];
         this.board[(this.height-1) - oldY][oldX] = "";
+    }
+    
+    hasPiece(x, y)
+    {
+        return this.board[y][x] != "";
     }
 
     getPiece(x, y)
