@@ -36,14 +36,14 @@
         svg.addEventListener('mousedown', startDrag);
         svg.addEventListener('mousemove', drag);
         svg.addEventListener('mouseup', endDrag);
-        svg.addEventListener('mouseleave', endDrag);
+        svg.addEventListener('mouseleave', cancelDrag);
         
         // Handle touch screen events
         svg.addEventListener('touchstart', startDrag);
         svg.addEventListener('touchmove', drag);
         svg.addEventListener('touchend', endDrag);
-        svg.addEventListener('touchleave', endDrag);
-        svg.addEventListener('touchcancel', endDrag);
+        svg.addEventListener('touchleave', cancelDrag);
+        svg.addEventListener('touchcancel', cancelDrag);
 
         function startDrag(evt) {
             if (evt.target.classList.contains('draggable')) {
@@ -79,6 +79,7 @@
 
         function endDrag(evt) {
             hideLegalMoves();
+            drawBoard();
             if (element && startX != null && startY != null)
             {
                 let mouse = getMousePosition(evt);
@@ -103,6 +104,19 @@
                 }
             }
             element = false;
+        }
+
+        function cancelDrag()
+        {
+            hideLegalMoves();
+            if (element != false)
+            {
+                // Reset the element
+                element.setAttributeNS(null, "x", startX);
+                element.setAttributeNS(null, "y", startY);
+
+                element = false;
+            }
         }
 
         function isLegalMove(x, y)
@@ -181,12 +195,23 @@
 
     function drawBoard()
     {
-        // Create an SVG element with the right size and ID
-        var element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        element.setAttribute("id", "chessboard");
-        element.setAttribute("width", boardSize);
-        element.setAttribute("height", boardSize);
-        element.setAttribute("onload", "makeDraggable(evt)");
+        console.log(board.board)
+        const svg = document.getElementById("chessboard");
+        if (svg != null)
+        {
+            // Remove previous tags
+            svg.innerHTML = '';
+            var element = svg;
+        }
+        else 
+        {
+            // Create an SVG element with the right size and ID
+            var element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            element.setAttribute("id", "chessboard");
+            element.setAttribute("width", boardSize);
+            element.setAttribute("height", boardSize);
+            element.setAttribute("onload", "makeDraggable(evt)");
+        }
 
         // Draw all board squares
         for (let y = 0; y < 8; y++)
