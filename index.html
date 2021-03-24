@@ -79,7 +79,6 @@
 
         function endDrag(evt) {
             hideLegalMoves();
-            drawBoard();
             if (element && startX != null && startY != null)
             {
                 let mouse = getMousePosition(evt);
@@ -102,6 +101,7 @@
                     element.setAttributeNS(null, "x", startX);
                     element.setAttributeNS(null, "y", startY);
                 }
+                drawBoard();
             }
             element = false;
         }
@@ -236,7 +236,7 @@
         for (let x = 0; x < 8; x++)
         {
             let offsetX = x * squareSize;
-            let offsetY = (boardSize - squareSize) - (y * squareSize);
+            let offsetY = y * squareSize;
 
             let piece = board.getPiece(x, y);            
             if (piece != "")

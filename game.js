@@ -47,7 +47,7 @@ class Game {
                 }
             }
 
-            let playerID = (y < 5) ? 0 : 1;
+            let playerID = (y < 5) ? 1 : 0;
             board.setPiece(x, y, piece, playerID);
         }
     };
@@ -65,7 +65,7 @@ class Game {
         switch(piece)
         {
             case "pawn":
-                let multiplier = color == "white" ? 1 : -1;
+                let multiplier = color == "white" ? -1 : 1;
                 let newY = pieceLocation[1] + (multiplier);
                 for (let relX = -1; relX < 2; relX++)
                 {
