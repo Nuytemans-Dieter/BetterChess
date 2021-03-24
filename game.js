@@ -157,6 +157,7 @@ class Board {
     
     hasPiece(x, y)
     {
+        if ( ! this.isLegalField(x, y) ) return true;
         return this.board[(this.height-1) - y][x] != "";
     }
 
