@@ -58,7 +58,9 @@ class Game {
         let color = splitName[0];
         let piece = splitName[1];
 
-        let legalMoves = [];
+        // Find all possible moves for each piece
+
+        let possibleMoves = [];
 
         switch(piece)
         {
@@ -72,7 +74,7 @@ class Game {
                     let hasPiece = board.hasPiece(newX, newY);
 
                     if ( (hasPiece && mayHavePiece) || (!hasPiece && !mayHavePiece) )
-                    legalMoves.push(newX + "/" + newY);
+                    possibleMoves.push([newX, newY]);
                 }
                 break;
             case "rook":
@@ -85,6 +87,18 @@ class Game {
                 break;
             case "queen":
                 break;
+        }
+
+        // Retrieve all possible moves and store all moves that end up on the board
+
+        let legalMoves = [];
+
+        if (possibleMoves != null)
+        for (let index in possibleMoves)
+        {
+            let loc = possibleMoves[index];
+            if ( board.isLegalField(loc[0], loc[1]) )
+            legalMoves.push(loc[0] + "/" + loc[1]);
         }
 
         return legalMoves;
@@ -129,6 +143,11 @@ class Board {
     hasPiece(x, y)
     {
         return this.board[y][x] != "";
+    }
+
+    isLegalField(x, y)
+    {
+        return ( x >= 0 && x < this.width && y >= 0 && y < this.height );
     }
 
     getPiece(x, y)
