@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <title>BetterChess</title>
+    </head>
+    <body>
+        <h1>BetterChess</h1>
+        <div id="board"></div>
+    </body>
+</html>
+
+<style>
+    #chessboard {
+        border: 1px solid black;
+    }
+    .draggable {
+        cursor: move;
+    }
+</style>
+
+<!-- Pick the script that handles the game's logic -->
+<script src="game.js"></script>
+<script>
+    function makeDraggable(evt) {
+        
+        var element = false;
+        var startX = null;
+        var startY = null;
+
+        var svg = evt.target;
+        svg.addEventListener('mousedown', startDrag);
+        svg.addEventListener('mousemove', drag);
+        svg.addEventListener('mouseup', endDrag);
+        svg.addEventListener('mouseleave', endDrag);
+
+        function startDrag(evt) {
+            if (evt.target.classList.contains('draggable')) {
+                element = evt.target;
+
+                // Store the element's starting position
+                startX = element.getAttributeNS(null, "x");
+                startY = element.getAttributeNS(null, "y");
+                
+                // Store the relative mouse offset
+                offset = getMousePosition(evt);
+                offset.x -= parseFloat( startX );
+                offset.y -= parseFloat( startY );
+            }
+        }
+
+        function drag(evt) {
+            if (element)
+            {
+                evt.preventDefault();
+                let mouse = getMousePosition(evt);
+                element.setAttributeNS(null, "x", mouse.x - offset.x);
+                element.setAttributeNS(null, "y", mouse.y - offset.y);
+            }
+        }
+
+        function endDrag(evt) {
+            if (element && startX != null && startY != null)
+            {
+                element.setAttributeNS(null, "x", startX);
+                element.setAttributeNS(null, "y", startY);
+            }
+            element = false;
+        }
+
+        function getMousePosition(evt) {
+            var CTM = svg.getScreenCTM();
+            return {
+                x: (evt.clientX - CTM.e) / CTM.a,
+                y: (evt.clientY - CTM.f) / CTM.d
+            };
+        }
+    }
+</script>
+<script>
+
+    // Initialize game objects
+    let game = new Game();
+    let board = new Board();
+    let dragging = "";
+
+    // Explicit board settings
+    let squareSize = 100;
+    let primaryColor = "#eeeeee";
+    let secondaryColor = "#111111";
+    let chessSet = game.chessSet != null? game.chessSet : "drawn";
+
+    // Implicit board settings
+    let boardSize = 8 * squareSize;
+
+
+    // Display the initial state
+    game.setupBoard(board);
+    drawBoard()
+
+    function drawBoard()
+    {
+        // Create an SVG element with the right size and ID
+        var element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        element.setAttribute("id", "chessboard");
+        element.setAttribute("width", boardSize);
+        element.setAttribute("height", boardSize);
+        element.setAttribute("onload", "makeDraggable(evt)");
+
+        // Draw all board squares
+        for (let y = 0; y < 8; y++)
+        for (let x = 0; x < 8; x++)
+        {
+            let offsetX = x * squareSize;
+            let offsetY = y * squareSize;
+
+            let isEvenRank = y % 2 == 0;
+            let isEvenFile = x % 2 == 0;
+            let isPrimaryColor = isEvenRank ? isEvenFile : !isEvenFile;
+            let color = isPrimaryColor ? primaryColor : secondaryColor;
+            // Random colour generator:
+            //let color = Math.floor(Math.random()*16777215).toString(16);
+            
+
+            element.insertAdjacentHTML( 'beforeend', `<rect x=${offsetX} y=${offsetY} width=${squareSize} height=${squareSize} style="fill:${color};""></rect>`);
+        }
+
+        // Draw all pieces
+        for (let y = 0; y < 8; y++)
+        for (let x = 0; x < 8; x++)
+        {
+            let offsetX = x * squareSize;
+            let offsetY = y * squareSize;
+
+            let piece = board.getPiece(x, y);            
+            if (piece != "")
+            {
+                let path = "/img/" + chessSet + "/" + piece + ".png";
+                element.insertAdjacentHTML( 'beforeend', `<image href="${path}" class="draggable" x=${offsetX} y=${offsetY} height="${squareSize}" width="${squareSize}"/>` );
+            }
+    
+        }
+
+
+
+        // Insert the generated board into the HTML
+        document.getElementById("board").appendChild( element );
+    }
+
+</script>
