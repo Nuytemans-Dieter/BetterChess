@@ -134,6 +134,17 @@ class Game {
 
                 break;
             case "knight":
+                let rel = [-2, 2, -1, 1];
+                for (let i = 0; i < rel.length; i++)
+                for (let j = 0; j < rel.length; j++)
+                {
+                    let relX = rel[i];
+                    let relY = rel[j];
+                    if (Math.abs(relX) != Math.abs(relY))
+                    {
+                        possibleMoves.push([x + relX, y + relY]);
+                    }
+                }
                 break;
             case "bishop":
                 break;
