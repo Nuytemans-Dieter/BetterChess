@@ -63,6 +63,7 @@
                 offset.y -= parseFloat( startY );
 
                 legalMoves = game.getLegalMoves(piece, [startXIndex, startYIndex], board);
+                drawLegalMoves(legalMoves);
             }
         }
 
@@ -77,6 +78,7 @@
         }
 
         function endDrag(evt) {
+            hideLegalMoves();
             if (element && startX != null && startY != null)
             {
                 let mouse = getMousePosition(evt);
@@ -125,6 +127,34 @@
             };
         }
     }
+</script>
+
+<!-- Visual helper functions -->
+<script>
+
+    function drawLegalMoves(legalMoves)
+    {
+        let svgElement = document.getElementById("chessboard");
+        for (let index in legalMoves)
+        {
+            let move = legalMoves[index].split("/");
+            let x = move[0]; let y = move[1];
+
+            let centerX = (squareSize * x) + (squareSize / 2);
+            let centerY = (squareSize * y) + (squareSize / 2);
+
+            svgElement.insertAdjacentHTML( 'beforeend', `<circle class="legalMove" cx=${centerX} cy=${centerY} r=${squareSize / 4} style="fill:green;""></circle>`);
+        }
+    }
+
+    function hideLegalMoves()
+    {
+        var elements = document.getElementsByClassName("legalMove");
+        while(elements.length > 0){
+            elements[0].parentNode.removeChild(elements[0]);
+        }
+    }
+
 </script>
 
 <!-- This script handles the game loop and uses the custom Game object -->
