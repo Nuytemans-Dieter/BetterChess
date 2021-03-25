@@ -150,17 +150,14 @@ class Game {
                         break;
                     case 1:
                     case 6:
-                        //piece = "knight";
-                        piece = null;
+                        piece = "knight";
                         break;
                     case 2:
                     case 5:
-                        piece = null;
-                        //piece = "bishop";
+                        piece = "bishop";
                         break;
                     case 3:
-                        piece = null;
-                        //piece = "queen";
+                        piece = "queen";
                         break;
                     case 4:
                         piece = "king";
