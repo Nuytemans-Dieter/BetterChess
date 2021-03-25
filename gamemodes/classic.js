@@ -118,6 +118,16 @@ class Game {
             {
                 this.passantLocation = [endX, endY];
             }
+
+            // Handle pawn promotion: Always promote to queen 
+            if (piece == "pawn")
+            {
+                let yPromote = this.players[this.playerTurn] == "white" ? 0 : 7;
+                if (endY == yPromote)
+                {
+                    board.setPiece(endX, endY, "queen", this.playerTurn)
+                }
+            }
         }
 
         // Update the player's turn
