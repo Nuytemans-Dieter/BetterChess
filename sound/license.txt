@@ -1,0 +1,7 @@
+This work is licensed under the Attribution Noncommercial License: https://creativecommons.org/licenses/by-nc/3.0/
+
+Default:
+move.wav: https://freesound.org/people/Jagadamba/sounds/254315/
+grab.wav: https://freesound.org/people/coobek/sounds/185611/
+capture.wav: https://freesound.org/people/GameAudio/sounds/220203/
+game-over.wav: https://freesound.org/people/Mativve/sounds/391539/

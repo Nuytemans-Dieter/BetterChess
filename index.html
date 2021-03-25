@@ -34,12 +34,18 @@
 
 <!-- Pick the script that handles the game's logic -->
 <script src="gamemodes/classic.js"></script>
+
+<!-- Utility scripts -->
+<script src="lib/sounds.js"></script>
 <script src="lib/board.js"></script>
 
 <!-- This script handles user dragging input -->
 <script>
     function makeDraggable(evt) {
         
+        var sounds = new SoundPlayer();
+        //sounds.setLibrary("default");
+
         var element = false;
         var startX = null;
         var startY = null;
@@ -63,6 +69,9 @@
 
         function startDrag(evt) {
             if (evt.target.classList.contains('draggable')) {
+
+                sounds.playGrabSound();
+
                 element = evt.target;
 
                 // Store the element's starting position
@@ -118,7 +127,12 @@
                     element.setAttributeNS(null, "x", newX);
                     element.setAttributeNS(null, "y", newY);
 
-                    game.movePiece(board, startXIndex, startYIndex, xIndex, yIndex);
+                    let captured = game.movePiece(board, startXIndex, startYIndex, xIndex, yIndex);
+
+                    if (captured == "")
+                        sounds.playMoveSound();
+                    else
+                        sounds.playCaptureSound();
 
                     drawBoard();
                 }
@@ -130,6 +144,9 @@
                 }
             }
             element = false;
+
+            if (game.isGameOver)
+                sounds.playGameOverSound();
 
             // Update info
             updateGameInfo();
