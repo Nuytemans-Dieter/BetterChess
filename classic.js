@@ -10,6 +10,16 @@ class Game {
         this.passantLocation = null;
         this.passantAttackLocation = null;
         this.chessSet = "drawn";
+        this.canCastle = [];
+        for (let i in this.players)
+        {
+            this.canCastle.push(
+                {
+                    'canQueenside': true,
+                    'canKingside': true
+                }
+            );
+        }
     }
 
 
@@ -43,13 +53,38 @@ class Game {
                 board.erasePiece(this.passantLocation[0], this.passantLocation[1]);
         }
 
+        // Reset the en passant tracker
         this.passantLocation = null;
+
+        // update meta data
         if (pieceInfo != "")
         {
 
             let split = pieceInfo.split("/");
             let player = split[0];
             let piece = split[1];
+
+            // Update castling rights on king movement
+            if (piece == "king")
+            {
+                this.canCastle[this.playerTurn].canKingside = false;
+                this.canCastle[this.playerTurn].canQueenside = false;
+            }
+
+            // Update castling rights on rook movement
+            if (piece == "rook")
+            {
+                if (startX == 0)
+                {
+                    this.canCastle[this.playerTurn].canQueenside = false;
+                }
+                else if (startX == 7)
+                {
+                    this.canCastle[this.playerTurn].canKingside = false;
+                }
+            }
+
+            // Update en passant tracker
             if (piece == "pawn" && ( (player == "white" && startY == 6) || (player == "black" && startY == 1) ) && Math.abs(startY - endY) == 2 )
             {
                 this.passantLocation = [endX, endY];
@@ -270,11 +305,37 @@ class Game {
                 break;
             case "king":
 
+                // Basic king movement
                 for (let relX = -1; relX <= 1; relX++)
                 for (let relY = -1; relY <= 1; relY++)
                 {
                     if ( !(relX == 0 && relY == 0))
                         possibleMoves.push([x + relX, y + relY]);
+                }
+                
+                console.log("Kside" + this.canCastle[this.playerTurn].canKingside)
+                // King side castling
+                if (this.canCastle[this.playerTurn].canKingside)
+                {
+                    let relX = x + 2;
+                    let mayCastle = true;
+                    for (let interX = 1; mayCastle && interX <= 2; interX++)
+                    {
+                        mayCastle = !board.hasPiece(x + interX, y);
+                    }
+                    possibleMoves.push(relX, y);
+                }
+                console.log("Qside" + this.canCastle[this.playerTurn].canQueenside)
+                // Queen side castling
+                if (this.canCastle[this.playerTurn].canQueenside)
+                {
+                    let relX = x - 2;
+                    let mayCastle = true;
+                    for (let interX = -1; mayCastle && interX >= -2; interX--)
+                    {
+                        mayCastle = !board.hasPiece(x + interX, y);
+                    }
+                    possibleMoves.push(relX, y);
                 }
 
                 break;
