@@ -2,14 +2,21 @@ class Game {
     
     constructor() {
 
+        // Game settings
+        this.chessSet = "drawn";
+
+        // Game information
         this.players = ["white", "black"];
         this.playerTurn = 0;
         this.winnerID = null;
         this.isGameOver = false;
         this.pieces = ["pawn", "bishop", "knight", "rook", "queen", "king"];
+        
+        // En passant state tracking
         this.passantLocation = null;
         this.passantAttackLocation = null;
-        this.chessSet = "drawn";
+
+        // Castling state tracking
         this.canCastle = new Map();
         for (let i in this.players)
         {
@@ -63,12 +70,32 @@ class Game {
             let player = split[0];
             let piece = split[1];
 
-            // Update castling rights on king movement
+            // Update castling rights on king movement and perform castling when needed
             if (piece == "king")
             {
                 let dict = this.canCastle.get(this.currentPlayerName());
                 dict.canKingside = false;
                 dict.canQueenside = false;
+
+                // Check if the king did a castling move and adjust the rook
+                let delta = endX - startX;
+                if (Math.abs(delta) == 2 && startY - endY == 0)
+                {
+                    let rookLoc;
+                    let newRookLoc;
+                    if (delta > 0)
+                    {
+                        rookLoc = [7, endY];
+                        newRookLoc = [5, endY];
+                    }
+                    else
+                    {
+                        rookLoc = [0, endY];
+                        newRookLoc = [3, endY];
+                    }
+                    
+                    board.movePiece(rookLoc[0], rookLoc[1], newRookLoc[0], newRookLoc[1]);
+                }
             }
 
             // Update castling rights on rook movement
@@ -466,7 +493,9 @@ class Board {
 
     erasePiece(x, y)
     {
+        let piece = this.getPiece(x, y);
         this.setPiece(x, y, null, null);
+        return piece;
     }
 
     setPiece(x, y, piece, playerID)
