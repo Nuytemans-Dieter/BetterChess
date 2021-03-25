@@ -279,7 +279,7 @@ class Game {
 
                 break;
             case "queen":
-                let hasCollision = false;
+                hasCollision = false;
                 for (let relX = -1; !hasCollision && relX >= -7; relX--)
                 {
                     let newX = x + relX;
@@ -369,7 +369,7 @@ class Game {
         for (let index in possibleMoves)
         {
             let loc = possibleMoves[index];
-            if ( board.isLegalField(loc[0], loc[1]) )
+            if ( board.isLegalField(loc[0], loc[1]) && !board.playerHasPiece(loc[0], loc[1], this.players[this.playerTurn]) )
             legalMoves.push(loc[0] + "/" + loc[1]);
         }
 
@@ -418,6 +418,14 @@ class Board {
     {
         if ( ! this.isLegalField(x, y) ) return true;
         return this.board[(this.height-1) - y][x] != "";
+    }
+
+    playerHasPiece(x, y, playerString)
+    {
+        let piece = this.getPiece(x, y);
+        if (piece == "") return false;
+        let color = piece.split("/")[0];
+        return color == playerString;
     }
 
     isLegalField(x, y)

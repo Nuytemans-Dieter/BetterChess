@@ -4,6 +4,7 @@
     </head>
     <body>
         <h1>BetterChess</h1>
+        <div id="info"></div>
         <div id="board"></div>
     </body>
 </html>
@@ -78,7 +79,9 @@
         }
 
         function endDrag(evt) {
+           
             hideLegalMoves();
+            
             if (element && startX != null && startY != null)
             {
                 let mouse = getMousePosition(evt);
@@ -106,6 +109,9 @@
                 }
             }
             element = false;
+
+            // Update info
+            updateGameInfo();
         }
 
         function cancelDrag()
@@ -147,6 +153,17 @@
 
 <!-- Visual helper functions -->
 <script>
+
+    function updateGameInfo()
+    {
+        let div = document.getElementById("info");
+        div.innerHTML = '';
+        if (game.isGameOver)
+        {
+            div.insertAdjacentHTML( 'beforeend', `<h1>${game.players[game.winnerID]} won!</h1>`);
+        }
+        div.insertAdjacentHTML('beforeend',`<b><p>Player turn: ${game.players[game.playerTurn]}</p></b>`);
+    }
 
     function drawLegalMoves(legalMoves)
     {
@@ -193,7 +210,8 @@
 
     // Display the initial state
     game.setupBoard(board);
-    drawBoard()
+    updateGameInfo();
+    drawBoard();
 
     function drawBoard()
     {
