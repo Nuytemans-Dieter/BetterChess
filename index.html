@@ -71,9 +71,13 @@
                 piece = board.getPiece(startXIndex, startYIndex);
 
                 // Store the relative mouse offset
-                offset = getMousePosition(evt);
-                offset.x -= parseFloat( startX );
-                offset.y -= parseFloat( startY );
+                //offset = getMousePosition(evt);
+                //offset.x -= parseFloat( startX );
+                //offset.y -= parseFloat( startY );
+
+                let mouse = getMousePosition(evt);
+                element.setAttributeNS(null, "x", mouse.x - squareSize/2);
+                element.setAttributeNS(null, "y", mouse.y - squareSize/2);
 
                 legalMoves = game.getLegalMoves(piece, [startXIndex, startYIndex], board);
                 drawLegalMoves(legalMoves);
@@ -85,8 +89,10 @@
             {
                 evt.preventDefault();
                 let mouse = getMousePosition(evt);
-                element.setAttributeNS(null, "x", mouse.x - offset.x);
-                element.setAttributeNS(null, "y", mouse.y - offset.y);
+                element.setAttributeNS(null, "x", mouse.x - squareSize/2);
+                element.setAttributeNS(null, "y", mouse.y - squareSize/2);
+                //element.setAttributeNS(null, "x", mouse.x - offset.x);
+                //element.setAttributeNS(null, "y", mouse.y - offset.y);
             }
         }
 
