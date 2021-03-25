@@ -220,7 +220,7 @@ class Game {
                 
                 // Allow two field move when no piece is present and pawn is of the right team and in the right location
                 let twoMoveY = y + (multiplier * 2);
-                if ( (!board.hasPiece(x, twoMoveY)) && ( (color == "white" && y == 6) || (color == "black" && y == 1)) )
+                if ( (!board.hasPiece(x, twoMoveY)) && !board.hasPiece(x, y + multiplier) && ( (color == "white" && y == 6) || (color == "black" && y == 1)) )
                 {
                     possibleMoves.push([x, twoMoveY]);
                 }
