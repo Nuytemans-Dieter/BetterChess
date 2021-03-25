@@ -3,6 +3,7 @@ class Game {
     constructor() {
 
         this.players = ["white", "black"];
+        this.playerTurn = 0;
         this.pieces = ["pawn", "bishop", "knight", "rook", "queen", "king"];
         this.passantLocation = null;
         this.passantAttackLocation = null;
@@ -12,10 +13,14 @@ class Game {
 
     movePiece(board, startX, startY, endX, endY)
     {
+        // Get piece info
         let pieceInfo = board.getPiece(startX, startY);
 
         // Update the piece's position
         board.movePiece(startX, startY, endX, endY);
+
+        // Update the player's turn
+        this.playerTurn = this.playerTurn + 1 < this.players.length ? this.playerTurn + 1 : 0;
 
         // Handle captured pieces through en passant captures
         if (this.passantAttackLocation != null && this.passantAttackLocation[0] == endX && this.passantAttackLocation[1] == endY)
@@ -89,6 +94,9 @@ class Game {
         let splitName = pieceName.split("/");
         let color = splitName[0];
         let piece = splitName[1];
+
+        if (color != this.players[this.playerTurn])
+            return [];        
 
         let x = pieceLocation[0];
         let y = pieceLocation[1];
