@@ -345,7 +345,6 @@ class Game {
                         possibleMoves.push([x + relX, y + relY]);
                 }
                 
-                console.log("Kside" + this.canCastle.get(this.currentPlayerName()).canKingside)
                 // King side castling
                 if (this.canCastle.get(this.currentPlayerName()).canKingside)
                 {
@@ -357,13 +356,13 @@ class Game {
                     }
                     possibleMoves.push([relX, y]);
                 }
-                console.log("Qside" + this.canCastle.get(this.currentPlayerName()).canQueenside)
+                
                 // Queen side castling
                 if (this.canCastle.get(this.currentPlayerName()).canQueenside)
                 {
                     let relX = x - 2;
                     let mayCastle = true;
-                    for (let interX = -1; mayCastle && interX >= -2; interX--)
+                    for (let interX = -1; mayCastle && interX >= -3; interX--)
                     {
                         mayCastle = !board.hasPiece(x + interX, y);
                     }
