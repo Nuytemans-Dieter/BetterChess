@@ -5,3 +5,9 @@ move.wav: https://freesound.org/people/Jagadamba/sounds/254315/
 grab.wav: https://freesound.org/people/coobek/sounds/185611/
 capture.wav: https://freesound.org/people/GameAudio/sounds/220203/
 game-over.wav: https://freesound.org/people/Mativve/sounds/391539/
+
+Cartoon:
+Sounds from Zapsplat.com
+
+Retro:
+Sounds from https://mixkit.co/free-sound-effects/

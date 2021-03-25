@@ -4,6 +4,9 @@
     </head>
     <body>
         <h1>BetterChess</h1>
+        <div id="info"></div>
+        <div id="board"></div>
+        <h2>Visual settings</h2>
         <form>
             <select onchange="changeChessSet(this.value)" id="setPicker">
                 <option value="">Pick a chess set</option>
@@ -13,9 +16,14 @@
             </select>
             <input type="color" value="#dddddd" id="primaryColor" onchange="updatePrimaryColor(this.value)">
             <input type="color" value="#222222" id="secondaryColor" onchange="updateSecondaryColor(this.value)">
+            <br>
+            <select onchange="changeSoundLib(this.value)" id="soundPicker">
+                <option value="">Pick a sound library</option>
+                <option value="default">Default</option>
+                <option value="retro">Retro</option>
+                <option value="cartoon">Cartoon</option>
+            </select>
         </form>
-        <div id="info"></div>
-        <div id="board"></div>
     </body>
 </html>
 
@@ -41,10 +49,11 @@
 
 <!-- This script handles user dragging input -->
 <script>
+
+    var sounds = new SoundPlayer();
+    //sounds.setLibrary("cartoon");
+
     function makeDraggable(evt) {
-        
-        var sounds = new SoundPlayer();
-        //sounds.setLibrary("default");
 
         var element = false;
         var startX = null;
@@ -134,6 +143,9 @@
                     else
                         sounds.playCaptureSound();
 
+                    if (game.isGameOver)
+                        sounds.playGameOverSound();
+
                     drawBoard();
                 }
                 else
@@ -144,9 +156,6 @@
                 }
             }
             element = false;
-
-            if (game.isGameOver)
-                sounds.playGameOverSound();
 
             // Update info
             updateGameInfo();
@@ -228,9 +237,15 @@
 
     function changeChessSet(value)
     {
-        if (value == null || value == "") return;
+        if (value == "") return;
         chessSet = value;
         drawBoard();
+    }
+
+    function changeSoundLib(value)
+    {
+        if (value == "") return;
+        sounds.setLibrary(value);
     }
 
     function updatePrimaryColor(value)
