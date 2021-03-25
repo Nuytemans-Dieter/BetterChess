@@ -16,6 +16,10 @@
     .draggable {
         cursor: move;
     }
+    .pixelated {
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+    }
 </style>
 
 <!-- Pick the script that handles the game's logic -->
@@ -257,11 +261,12 @@
             let offsetX = x * squareSize;
             let offsetY = y * squareSize;
 
-            let piece = board.getPiece(x, y);            
+            let piece = board.getPiece(x, y);
+            let pixelate = game.doPixelate ? "pixelated" : "";
             if (piece != "")
             {
                 let path = "/img/" + chessSet + "/" + piece + ".png";
-                element.insertAdjacentHTML( 'beforeend', `<image href="${path}" class="draggable" x=${offsetX} y=${offsetY} height="${squareSize}" width="${squareSize}"/>` );
+                element.insertAdjacentHTML( 'beforeend', `<image href="${path}" class="draggable ${pixelate}" x=${offsetX} y=${offsetY} height="${squareSize}" width="${squareSize}"/>` );
             }
     
         }

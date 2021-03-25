@@ -3,7 +3,8 @@ class Game {
     constructor() {
 
         // Game settings
-        this.chessSet = "drawn";
+        this.chessSet = "illustrated";                  // The default chosen chess set
+        this.doPixelate = this.chessSet == "pixel";     // Whether or not to pixelate when scaling (Set this to true for pixel art)
 
         // Game information
         this.players = ["white", "black"];
