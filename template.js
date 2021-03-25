@@ -2,22 +2,45 @@ class Game {
     
     constructor() {
 
+        // Game settings
+        this.chessSet = "illustrated";                  // The default chosen chess set
+
+        // Game information
         this.players = ["white", "black"];
         this.playerTurn = 0;
+        this.winnerID = null;
+        this.isGameOver = false;
         this.pieces = ["pawn", "bishop", "knight", "rook", "queen", "king"];
-        this.passantLocation = null;
-        this.passantAttackLocation = null;
-        this.chessSet = "drawn";
     }
 
+    currentPlayerName()
+    {
+        return this.players[this.playerTurn];
+    }
 
     movePiece(board, startX, startY, endX, endY)
     {
+        // Get piece info
+        let pieceInfo = board.getPiece(startX, startY);
+
         // Update the piece's position
-        board.movePiece(startX, startY, endX, endY);
+        let captured = board.movePiece(startX, startY, endX, endY);
+
+        if (captured != "")
+        {
+            let capturedInfo = captured.split("/");
+            let capColor = capturedInfo[0];
+            let capPiece = capturedInfo[1];
+            if (capPiece == "king")
+            {
+                this.isGameOver = true;
+                this.winnerID = this.playerTurn;
+            }
+        }
 
         // Update the player's turn
         this.playerTurn = this.playerTurn + 1 < this.players.length ? this.playerTurn + 1 : 0;
+
     }
 
     setupBoard(board) 
@@ -66,7 +89,6 @@ class Game {
     };
 
     getLegalMoves(pieceName, pieceLocation, board) {
-
         // Return no moves if there is no selected piece
         if (pieceName == "") return [];
 
@@ -77,7 +99,7 @@ class Game {
         // Return no moves if these pieces are not of the current player
         if (color != this.players[this.playerTurn]) return [];
 
-        // Handle player direction (for pawns, as example) 
+        // Handle player direction (for pawns, for example) 
         let multiplier = this.players[this.playerTurn] == "white" ? -1 : 1;
 
         // Calculate possible moves here
@@ -124,7 +146,9 @@ class Board {
 
     erasePiece(x, y)
     {
+        let piece = this.getPiece(x, y);
         this.setPiece(x, y, null, null);
+        return piece;
     }
 
     setPiece(x, y, piece, playerID)
@@ -135,14 +159,24 @@ class Board {
 
     movePiece(oldX, oldY, newX, newY)
     {
+        let captured = this.board[(this.height-1) - newY][newX];
         this.board[(this.height-1) - newY][newX] = this.board[(this.height-1) - oldY][oldX];
         this.board[(this.height-1) - oldY][oldX] = "";
+        return captured;
     }
     
     hasPiece(x, y)
     {
         if ( ! this.isLegalField(x, y) ) return true;
         return this.board[(this.height-1) - y][x] != "";
+    }
+
+    playerHasPiece(x, y, playerString)
+    {
+        let piece = this.getPiece(x, y);
+        if (piece == "") return false;
+        let color = piece.split("/")[0];
+        return color == playerString;
     }
 
     isLegalField(x, y)
