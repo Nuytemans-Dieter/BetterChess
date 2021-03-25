@@ -4,6 +4,14 @@
     </head>
     <body>
         <h1>BetterChess</h1>
+        <form>
+            <select onchange="changeChessSet(this.value)" id="setPicker">
+                <option value="">Pick a chess set</option>
+                <option value="illustrated">Illustrated</option>
+                <option value="drawn">Drawn</option>
+                <option value="pixel">Pixels</option>
+              </select>
+        </form>
         <div id="info"></div>
         <div id="board"></div>
     </body>
@@ -192,6 +200,18 @@
         }
     }
 
+    function changeChessSet(value)
+    {
+        if (value == null) return;
+        chessSet = value;
+        drawBoard();
+    }
+
+    function doPixelate(chessSet)
+    {
+        return chessSet == "pixel";
+    }
+
 </script>
 
 <!-- This script handles the game loop and uses the custom Game object -->
@@ -262,11 +282,11 @@
             let offsetY = y * squareSize;
 
             let piece = board.getPiece(x, y);
-            let pixelate = game.doPixelate ? "pixelated" : "";
+            let pixelate = doPixelate(chessSet) ? " pixelated" : "";
             if (piece != "")
             {
                 let path = "/img/" + chessSet + "/" + piece + ".png";
-                element.insertAdjacentHTML( 'beforeend', `<image href="${path}" class="draggable ${pixelate}" x=${offsetX} y=${offsetY} height="${squareSize}" width="${squareSize}"/>` );
+                element.insertAdjacentHTML( 'beforeend', `<image href="${path}" class="draggable${pixelate}" x=${offsetX} y=${offsetY} height="${squareSize}" width="${squareSize}"/>` );
             }
     
         }
