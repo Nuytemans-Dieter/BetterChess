@@ -10,7 +10,9 @@
                 <option value="illustrated">Illustrated</option>
                 <option value="drawn">Drawn</option>
                 <option value="pixel">Pixels</option>
-              </select>
+            </select>
+            <input type="color" value="#dddddd" id="primaryColor" onchange="updatePrimaryColor(this.value)">
+            <input type="color" value="#222222" id="secondaryColor" onchange="updateSecondaryColor(this.value)">
         </form>
         <div id="info"></div>
         <div id="board"></div>
@@ -213,6 +215,18 @@
         drawBoard();
     }
 
+    function updatePrimaryColor(value)
+    {
+        primaryColor = value;
+        drawBoard();
+    }
+
+    function updateSecondaryColor(value)
+    {
+        secondaryColor = value;
+        drawBoard();
+    }
+
     function doPixelate(chessSet)
     {
         return chessSet == "pixel";
@@ -230,8 +244,8 @@
 
     // Explicit board settings
     let squareSize = 100;
-    let primaryColor = "#dddddd";
-    let secondaryColor = "#222222";
+    let primaryColor = document.getElementById("primaryColor").value;
+    let secondaryColor = document.getElementById("secondaryColor").value;
     let chessSet = game.chessSet != null? game.chessSet : "drawn";
 
     // Implicit board settings
