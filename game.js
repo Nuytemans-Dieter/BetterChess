@@ -4,11 +4,43 @@ class Game {
 
         this.players = ["white", "black"];
         this.pieces = ["pawn", "bishop", "knight", "rook", "queen", "king"];
+        this.passantLocation = null;
+        this.passantAttackLocation = null;
         this.chessSet = "drawn";
     }
 
 
-    setupBoard(board) {
+    movePiece(board, startX, startY, endX, endY)
+    {
+        let pieceInfo = board.getPiece(startX, startY);
+
+        // Update the piece's position
+        board.movePiece(startX, startY, endX, endY);
+
+        // Handle captured pieces through en passant captures
+        if (this.passantAttackLocation != null && this.passantAttackLocation[0] == endX && this.passantAttackLocation[1] == endY)
+        {
+            if (this.passantLocation != null)
+                board.erasePiece(this.passantLocation[0], this.passantLocation[1]);
+        }
+
+        this.passantLocation = null;
+        if (pieceInfo != "")
+        {
+
+            let split = pieceInfo.split("/");
+            let player = split[0];
+            let piece = split[1];
+            if (piece == "pawn" && ( (player == "white" && startY == 6) || (player == "black" && startY == 1) ) && Math.abs(startY - endY) == 2 )
+            {
+                this.passantLocation = [endX, endY];
+            }
+        }
+
+    }
+
+    setupBoard(board) 
+    {
 
         // Copy the players in this game to the board
         board.players = this.players;
@@ -94,7 +126,27 @@ class Game {
                     possibleMoves.push([x, twoMoveY]);
                 }
                 
-                // TODO: En passant
+                // Handle en passant rules and extra data
+                if (this.passantLocation != null)
+                {
+                    let passantInfo = board.getPiece(this.passantLocation[0], this.passantLocation[1]).split("/");
+                    let passantColor = passantInfo[0];
+                    if (passantColor != color)
+                    {
+                        if (this.passantLocation[0] == x - 1 && this.passantLocation[1] == y )
+                        {
+                            let loc = [x - 1, newY];
+                            possibleMoves.push(loc);
+                            this.passantAttackLocation = loc;
+                        }
+                        else if (this.passantLocation[0] == x + 1 && this.passantLocation[1] == y )
+                        {
+                            let loc = [x + 1, newY];
+                            possibleMoves.push(loc);
+                            this.passantAttackLocation = loc;
+                        }
+                    }
+                }
 
                 break;
             case "rook":
@@ -351,7 +403,6 @@ class Board {
 
     getPiece(x, y)
     {
-        if (x < 0 || x > 7 || y < 0 || y > 7) return "";
         return this.board[(this.height-1) - y][x];
     }
 }

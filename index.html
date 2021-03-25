@@ -93,7 +93,8 @@
 
                     element.setAttributeNS(null, "x", newX);
                     element.setAttributeNS(null, "y", newY);
-                    board.movePiece(startXIndex, startYIndex, xIndex, yIndex);
+
+                    game.movePiece(board, startXIndex, startYIndex, xIndex, yIndex);
 
                     drawBoard();
                 }
