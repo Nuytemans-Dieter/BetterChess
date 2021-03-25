@@ -4,6 +4,8 @@ class Game {
 
         this.players = ["white", "black"];
         this.playerTurn = 0;
+        this.winnerID = null;
+        this.isGameOver = false;
         this.pieces = ["pawn", "bishop", "knight", "rook", "queen", "king"];
         this.passantLocation = null;
         this.passantAttackLocation = null;
@@ -17,7 +19,19 @@ class Game {
         let pieceInfo = board.getPiece(startX, startY);
 
         // Update the piece's position
-        board.movePiece(startX, startY, endX, endY);
+        let captured = board.movePiece(startX, startY, endX, endY);
+
+        if (captured != "")
+        {
+            let capturedInfo = captured.split("/");
+            let capColor = capturedInfo[0];
+            let capPiece = capturedInfo[1];
+            if (capPiece == "king")
+            {
+                this.isGameOver = true;
+                this.winnerID = this.playerTurn;
+            }
+        }
 
         // Update the player's turn
         this.playerTurn = this.playerTurn + 1 < this.players.length ? this.playerTurn + 1 : 0;
@@ -95,7 +109,7 @@ class Game {
         let color = splitName[0];
         let piece = splitName[1];
 
-        if (color != this.players[this.playerTurn])
+        if (color != this.players[this.playerTurn] || this.isGameOver)
             return [];        
 
         let x = pieceLocation[0];
@@ -394,8 +408,10 @@ class Board {
 
     movePiece(oldX, oldY, newX, newY)
     {
+        let captured = this.board[(this.height-1) - newY][newX];
         this.board[(this.height-1) - newY][newX] = this.board[(this.height-1) - oldY][oldX];
         this.board[(this.height-1) - oldY][oldX] = "";
+        return captured;
     }
     
     hasPiece(x, y)
