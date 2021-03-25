@@ -137,11 +137,11 @@
                     element.setAttributeNS(null, "y", newY);
 
                     let captured = game.movePiece(board, startXIndex, startYIndex, xIndex, yIndex);
-
-                    if (captured == "")
-                        sounds.playMoveSound();
-                    else
+                    
+                    if (captured)
                         sounds.playCaptureSound();
+                    else
+                        sounds.playMoveSound();
 
                     if (game.isGameOver)
                         sounds.playGameOverSound();

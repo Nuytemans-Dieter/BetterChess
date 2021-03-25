@@ -39,6 +39,7 @@ class Game {
 
         // Update the piece's position
         let captured = board.movePiece(startX, startY, endX, endY);
+        let hasCaptured = captured != "";
 
         if (captured != "")
         {
@@ -55,8 +56,11 @@ class Game {
         // Handle captured pieces through en passant captures
         if (this.passantAttackLocation != null && this.passantAttackLocation[0] == endX && this.passantAttackLocation[1] == endY)
         {
-            if (this.passantLocation != null)
+            if (this.passantLocation != null) 
+            {
                 board.erasePiece(this.passantLocation[0], this.passantLocation[1]);
+                hasCaptured = true;
+            }
         }
 
         // Reset the en passant tracker
@@ -133,6 +137,7 @@ class Game {
         // Update the player's turn
         this.playerTurn = this.playerTurn + 1 < this.players.length ? this.playerTurn + 1 : 0;
 
+        return hasCaptured;
     }
 
     setupBoard(board) 
