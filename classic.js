@@ -10,18 +10,20 @@ class Game {
         this.passantLocation = null;
         this.passantAttackLocation = null;
         this.chessSet = "drawn";
-        this.canCastle = [];
+        this.canCastle = new Map();
         for (let i in this.players)
         {
-            this.canCastle.push(
-                {
-                    'canQueenside': true,
-                    'canKingside': true
-                }
-            );
+            this.canCastle.set(this.players[i], {
+                'canQueenside': true,
+                'canKingside': true
+            });
         }
     }
 
+    currentPlayerName()
+    {
+        return this.players[this.playerTurn];
+    }
 
     movePiece(board, startX, startY, endX, endY)
     {
@@ -42,9 +44,6 @@ class Game {
                 this.winnerID = this.playerTurn;
             }
         }
-
-        // Update the player's turn
-        this.playerTurn = this.playerTurn + 1 < this.players.length ? this.playerTurn + 1 : 0;
 
         // Handle captured pieces through en passant captures
         if (this.passantAttackLocation != null && this.passantAttackLocation[0] == endX && this.passantAttackLocation[1] == endY)
@@ -67,8 +66,9 @@ class Game {
             // Update castling rights on king movement
             if (piece == "king")
             {
-                this.canCastle[this.playerTurn].canKingside = false;
-                this.canCastle[this.playerTurn].canQueenside = false;
+                let dict = this.canCastle.get(this.currentPlayerName());
+                dict.canKingside = false;
+                dict.canQueenside = false;
             }
 
             // Update castling rights on rook movement
@@ -76,11 +76,13 @@ class Game {
             {
                 if (startX == 0)
                 {
-                    this.canCastle[this.playerTurn].canQueenside = false;
+                    let dict = this.canCastle.get(this.currentPlayerName());
+                    dict.canQueenside = false;
                 }
                 else if (startX == 7)
                 {
-                    this.canCastle[this.playerTurn].canKingside = false;
+                    let dict = this.canCastle.get(this.currentPlayerName());
+                    dict.canKingside = false;
                 }
             }
 
@@ -90,6 +92,9 @@ class Game {
                 this.passantLocation = [endX, endY];
             }
         }
+
+        // Update the player's turn
+        this.playerTurn = this.playerTurn + 1 < this.players.length ? this.playerTurn + 1 : 0;
 
     }
 
@@ -118,14 +123,17 @@ class Game {
                         break;
                     case 1:
                     case 6:
-                        piece = "knight";
+                        //piece = "knight";
+                        piece = null;
                         break;
                     case 2:
                     case 5:
-                        piece = "bishop";
+                        piece = null;
+                        //piece = "bishop";
                         break;
                     case 3:
-                        piece = "queen";
+                        piece = null;
+                        //piece = "queen";
                         break;
                     case 4:
                         piece = "king";
@@ -313,9 +321,9 @@ class Game {
                         possibleMoves.push([x + relX, y + relY]);
                 }
                 
-                console.log("Kside" + this.canCastle[this.playerTurn].canKingside)
+                console.log("Kside" + this.canCastle.get(this.currentPlayerName()).canKingside)
                 // King side castling
-                if (this.canCastle[this.playerTurn].canKingside)
+                if (this.canCastle.get(this.currentPlayerName()).canKingside)
                 {
                     let relX = x + 2;
                     let mayCastle = true;
@@ -323,11 +331,11 @@ class Game {
                     {
                         mayCastle = !board.hasPiece(x + interX, y);
                     }
-                    possibleMoves.push(relX, y);
+                    possibleMoves.push([relX, y]);
                 }
-                console.log("Qside" + this.canCastle[this.playerTurn].canQueenside)
+                console.log("Qside" + this.canCastle.get(this.currentPlayerName()).canQueenside)
                 // Queen side castling
-                if (this.canCastle[this.playerTurn].canQueenside)
+                if (this.canCastle.get(this.currentPlayerName()).canQueenside)
                 {
                     let relX = x - 2;
                     let mayCastle = true;
@@ -335,7 +343,7 @@ class Game {
                     {
                         mayCastle = !board.hasPiece(x + interX, y);
                     }
-                    possibleMoves.push(relX, y);
+                    possibleMoves.push([relX, y]);
                 }
 
                 break;
