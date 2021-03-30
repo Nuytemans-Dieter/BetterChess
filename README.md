@@ -1,4 +1,4 @@
-# Nuytemans-Dieter.github.io
+# BetterChess
 An offline chess implementation using HTML and Javascript.
 
 Try it out [here](https://nuytemans-dieter.github.io/)!
