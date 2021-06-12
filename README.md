@@ -1,7 +1,7 @@
 # BetterChess
 An offline chess implementation using HTML and Javascript.
 
-Try it out [here](https://nuytemans-dieter.github.io/)!
+Try it out [here](https://chess.nuytemans.com/)!
  ## Rule changes
  Some changes were made to the rules of chess (for now, at least).
  - Being in check does not prevent other moves
